@@ -35,15 +35,27 @@ export default function Page() {
         content: (
           <>
             <p className="mb-4">
-              Visitors arrive with different goals depending on source. LinkedIn
-              traffic often seeks credibility or roles; Instagram traffic skews
-              to visuals and quick demos. Tailor the first screen and CTA using
-              the HTTP referrer to reduce friction.
+              Visitors arrive with different goals depending on source &ndash;
+              the website where they clicked a link to get here. Perhaps
+              LinkedIn traffic is predominantly recruiters or hiring managers
+              looking for a portfolio of work and experience; Instagram traffic
+              may be more likely to be interested in buying products or
+              services. Content and call to action can be tailored using context
+              from the HTTP referrer to reduce friction.
+            </p>
+            <p className="mb-4">
+              This example demonstrates how a website could be personalised to
+              the context and intent of the visitor:
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Professional: case studies, team, open roles</li>
-              <li>Social: visual highlights, short demos</li>
-              <li>Fallback: neutral onboarding for direct/unknown</li>
+              <li>
+                Professional visitors from LinkedIn &rarr; full portfolio and
+                CV.
+              </li>
+              <li>Visitors from social media &rarr; sales funnel.</li>
+              <li>
+                Fallback &rarr; neutral limited profile for unknown sources.
+              </li>
             </ul>
           </>
         ),

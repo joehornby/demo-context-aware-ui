@@ -24,10 +24,18 @@ function getCopyFor(ref: AppContext["referrer"]) {
         cta: "Watch a demo",
       }
     : {
-        title: "Welcome, friend",
+        title: "Welcome, stranger",
         body: "Here's a limited preview of my portfolio.",
         cta: "View portfolio",
       };
+}
+
+function getReferrerUrl(ref: AppContext["referrer"]) {
+  return ref === "linkedin"
+    ? "https://www.linkedin.com/"
+    : ref === "instagram"
+    ? "https://www.instagram.com/"
+    : "https://example.com/unknown";
 }
 
 export function ReferrerDemo({ context }: Props) {
@@ -62,6 +70,15 @@ export function ReferrerDemo({ context }: Props) {
             </Button>
           ))}
         </Squircle>
+        <Squircle
+          cornerRadius={16}
+          cornerSmoothing={0.88}
+          className="mt-2 rounded-md border border-slate-200 bg-stone-200 p-3 font-mono text-[11px] leading-5 text-slate-700 whitespace-pre"
+        >
+          {`GET / HTTP/1.1\nHost: ${
+            typeof window !== "undefined" ? window.location.host : "example.com"
+          }\nReferer: ${getReferrerUrl(effectiveReferrer)}`}
+        </Squircle>
       </div>
 
       {/* Tiny browser mock */}
@@ -74,12 +91,10 @@ export function ReferrerDemo({ context }: Props) {
           </div>
           <div className="ml-2 text-xs font-medium text-slate-700">
             {effectiveReferrer === "linkedin"
-              ? "LinkedIn"
+              ? "My Portfolio and CV"
               : effectiveReferrer === "instagram"
-              ? "Instagram"
-              : effectiveReferrer === "direct"
-              ? "Direct"
-              : "Other site"}
+              ? "My Services and Products"
+              : "My Holding Page"}
           </div>
           <div className="ml-auto text-[10px] text-slate-400">
             referrer: {effectiveReferrer}
