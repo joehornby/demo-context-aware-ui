@@ -42,16 +42,33 @@ export function ConversationDemo() {
   }, []);
 
   return (
-    <div className="flex h-full flex-col rounded-lg border border-stone-200 bg-gradient-to-br from-rose-50 to-white p-4">
+    <div className="flex h-full flex-col">
       <h3 className="text-xl font-semibold">Live conversation → actions</h3>
 
       <div className="mt-3 grid grid-cols-2 gap-3 h-full">
         <div className="rounded-md border bg-white p-3 flex flex-col">
           <div className="text-xs text-stone-500 mb-1">Transcript</div>
-          <div className="text-sm text-stone-700 space-y-1 overflow-auto">
-            {transcript.map((t, i) => (
-              <div key={i}>• {t}</div>
-            ))}
+          <div className="flex flex-col gap-2 overflow-auto pr-1">
+            {transcript.map((t, i) => {
+              const isSelf = i % 2 === 1;
+              return (
+                <div
+                  key={i}
+                  className={isSelf ? "flex justify-end" : "flex justify-start"}
+                >
+                  <div
+                    className={
+                      (isSelf
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-stone-100 text-stone-800") +
+                      " max-w-[75%] rounded-2xl px-3 py-2 text-sm shadow-sm"
+                    }
+                  >
+                    {t}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
