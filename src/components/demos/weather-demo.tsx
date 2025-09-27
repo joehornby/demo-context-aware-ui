@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { AppContext } from "@/lib/context";
 import { useGeoWeather } from "@/hooks/useGeoWeather";
+import { Card, CardContent } from "@/components/ui/card";
+import { Squircle } from "corner-smoothing";
 
 type Props = { context: AppContext };
 
@@ -93,7 +95,11 @@ export function WeatherDemo({ context }: Props) {
     <div className="flex h-full flex-col">
       <h3 className="text-xl font-semibold mb-4">Your day plan</h3>
 
-      <div className="mt-4 rounded-md bg-white p-3 border">
+      <Squircle
+        cornerRadius={16}
+        cornerSmoothing={0.88}
+        className="mt-4 bg-white p-4"
+      >
         <p className="text-stone-700">
           Location: <span className="font-medium">{locationText}</span>
         </p>
@@ -108,15 +114,19 @@ export function WeatherDemo({ context }: Props) {
             Outlook: <span className="font-medium">{outlook}</span>
           </p>
         )}
-      </div>
+      </Squircle>
 
-      <div className="mt-4 rounded-md bg-emerald-50 border border-emerald-200 p-3">
+      <Squircle
+        cornerRadius={16}
+        cornerSmoothing={0.88}
+        className="mt-4 bg-emerald-100 p-4"
+      >
         <p className="text-emerald-900 text-sm">
           Suggestion: <span className="font-medium">{suggestion}</span>
         </p>
-      </div>
+      </Squircle>
 
-      <div className="mt-4 rounded-md bg-white border p-3">
+      <div className="mt-4">
         <p className="text-stone-800 font-medium mb-2">Nearby ideas</p>
         {geo?.lat == null || geo?.lon == null ? (
           <p className="text-sm text-stone-600">Waiting for location…</p>
@@ -125,26 +135,39 @@ export function WeatherDemo({ context }: Props) {
         ) : error ? (
           <p className="text-sm text-red-600">{error}</p>
         ) : suggestions && suggestions.length > 0 ? (
-          <ul className="text-sm space-y-2 list-disc pl-5">
-            {suggestions.slice(0, 6).map((s, idx) => (
-              <li key={idx} className="text-stone-800">
-                <span className="mr-2 rounded-sm px-1.5 py-0.5 text-[10px] uppercase tracking-wide border text-stone-600 bg-stone-50">
-                  {s.source === "ticketmaster" ? "Event" : "Place"}
-                </span>
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="underline decoration-stone-300 hover:decoration-stone-800"
-                >
-                  {s.title}
-                </a>
-                {s.when && (
-                  <span className="ml-2 text-stone-500">{s.when}</span>
-                )}
-              </li>
+          <div className="space-y-3">
+            {suggestions.slice(0, 3).map((s, idx) => (
+              <Squircle
+                key={idx}
+                cornerRadius={16}
+                cornerSmoothing={0.88}
+                className="bg-white"
+              >
+                <Card className="shadow-none border-none">
+                  <CardContent className="p-4">
+                    <div className="mb-1">
+                      <span className="mr-2 rounded-sm px-1.5 py-0.5 text-[10px] uppercase tracking-wide border text-stone-600 bg-stone-50">
+                        {s.source === "ticketmaster" ? "Event" : "Place"}
+                      </span>
+                    </div>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="underline decoration-stone-300 hover:decoration-stone-800 text-stone-900"
+                    >
+                      {s.title}
+                    </a>
+                    {s.when && (
+                      <div className="text-xs text-stone-500 mt-1">
+                        {s.when}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </Squircle>
             ))}
-          </ul>
+          </div>
         ) : (
           <p className="text-sm text-stone-600">
             No suggestions found right now.
