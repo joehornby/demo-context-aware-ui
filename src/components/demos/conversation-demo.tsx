@@ -64,6 +64,26 @@ function CalendarCard({ a }: { a: { title: string; when: string } }) {
   );
 }
 
+function ShareDropzoneCard({ a }: { a: { to: string; filename?: string } }) {
+  return (
+    <div className="border rounded p-2">
+      <div className="text-sm font-medium">Share a file</div>
+      <div className="text-xs text-stone-600">Recipient: {a.to}</div>
+
+      <div className="mt-2">
+        <div
+          className="h-28 w-full rounded-md border-2 border-dashed border-stone-300 bg-stone-50 hover:bg-stone-100 transition-colors flex flex-col items-center justify-center text-stone-600"
+          role="button"
+          aria-label="Upload file"
+        >
+          <div className="text-sm">Drag & drop a file here</div>
+          <div className="text-[11px] text-stone-400">or click to choose</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ConversationDemo() {
   const [transcript, setTranscript] = useState<string[]>([]);
   const [actions, setActions] = useState<Action[]>([]);
@@ -137,15 +157,7 @@ export function ConversationDemo() {
               a.type === "calendar" ? (
                 <CalendarCard key={i} a={a} />
               ) : a.type === "share" ? (
-                <div key={i} className="border rounded p-2">
-                  <div className="text-sm font-medium">Share a file</div>
-                  <div className="text-xs text-stone-600">
-                    Recipient: {a.to}
-                  </div>
-                  <Button variant="outline" size="sm" className="mt-2">
-                    Upload & send
-                  </Button>
-                </div>
+                <ShareDropzoneCard key={i} a={a} />
               ) : (
                 <div key={i} className="border rounded p-2">
                   <div className="text-sm font-medium">Note</div>
