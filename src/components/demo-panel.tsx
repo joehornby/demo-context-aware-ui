@@ -8,6 +8,7 @@ import { GenerativeDemo } from "./demos/generative-demo";
 import { ConversationDemo } from "./demos/conversation-demo";
 import { IntentDemo } from "./demos/intent-demo";
 import type { AppContext } from "@/lib/context";
+import { Squircle } from "corner-smoothing";
 
 type Props = {
   activeId: string;
@@ -16,11 +17,11 @@ type Props = {
 
 export function DemoPanel({ activeId, initialContext }: Props) {
   return (
-    <div className="h-full rounded-xl border border-slate-200 bg-white/70 backdrop-blur p-4 shadow-sm">
-      <div className="text-sm text-slate-500 mb-2">
-        Active demo: <span className="font-medium">{activeId}</span>
-      </div>
-
+    <Squircle
+      cornerRadius={50}
+      cornerSmoothing={0.88}
+      className="h-full bg-white/70 backdrop-blur p-12"
+    >
       <div className="relative h-[calc(100%-1.75rem)] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -28,7 +29,7 @@ export function DemoPanel({ activeId, initialContext }: Props) {
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -16, scale: 0.98 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
             className="absolute inset-0"
           >
             {activeId === "generative" && (
@@ -39,9 +40,7 @@ export function DemoPanel({ activeId, initialContext }: Props) {
             {activeId === "referrer" && (
               <ReferrerDemo context={initialContext} />
             )}
-            {activeId === "weather" && (
-              <WeatherDemo context={initialContext} />
-            )}
+            {activeId === "weather" && <WeatherDemo context={initialContext} />}
             {activeId === "incar" && <InCarDemo />}
             {/* Default fallback */}
             {![
@@ -52,13 +51,13 @@ export function DemoPanel({ activeId, initialContext }: Props) {
               "weather",
               "incar",
             ].includes(activeId) && (
-              <div className="flex h-full items-center justify-center text-slate-400">
+              <div className="flex h-full items-center justify-center">
                 Select a section
               </div>
             )}
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </Squircle>
   );
 }
