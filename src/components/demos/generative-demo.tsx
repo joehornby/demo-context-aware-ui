@@ -1,0 +1,121 @@
+"use client";
+
+import { useState } from "react";
+import type { AppContext } from "@/lib/context";
+
+type ToolCall =
+  | { name: "getWeather"; args: { city: string } }
+  | { name: "getCalendar"; args: { date: string } }
+  | { name: "getEvents"; args: { city: string; when: string } };
+
+function simulateTool(call: ToolCall) {
+  if (call.name === "getWeather") {
+    return { condition: "cloudy", tempC: 18 };
+  }
+  if (call.name === "getCalendar") {
+    return { freeBlocks: ["14:00–16:00"] };
+  }
+  if (call.name === "getEvents") {
+    return [
+      { title: "Design Expo", time: "15:00", type: "indoor" },
+      { title: "Park Run", time: "15:30", type: "outdoor" },
+    ];
+  }
+  throw new Error(`Unknown tool: ${(call as ToolCall).name}`);
+}
+
+export function GenerativeDemo({ context }: { context: AppContext }) {
+  const [log, setLog] = useState<string[]>([]);
+  const [plan, setPlan] = useState<
+    { title: string; reason: string; cta: string }[] | null
+  >(null);
+
+  const run = () => {
+    const steps: string[] = [];
+    steps.push("User hint: 'I have 2 hours free this afternoon'");
+    const weather = simulateTool({
+      name: "getWeather",
+      args: { city: context.location?.city ?? "London" },
+    }) as { condition: string; tempC: number };
+    steps.push(
+      `Tool:getWeather → ${weather.condition}, ${weather.tempC}°C`,
+    );
+    const cal = simulateTool({
+      name: "getCalendar",
+      args: { date: new Date().toDateString() },
+    }) as { freeBlocks: string[] };
+    steps.push(`Tool:getCalendar → free ${cal.freeBlocks.join(", ")}`);
+    const events = simulateTool({
+      name: "getEvents",
+      args: { city: context.location?.city ?? "London", when: "afternoon" },
+    }) as { title: string; time: string; type: string }[];
+    steps.push(
+      `Tool:getEvents → ${events.map((e) => e.title).join(", ")}`,
+    );
+
+    const picks = [
+      {
+        title: "Design Expo at 15:00",
+        reason:
+          "Indoor option fits cloudy weather; near you; fits 14–16 free block",
+        cta: "Get ticket",
+      },
+      {
+        title: "Park Run at 15:30",
+        reason: "Outdoor if you prefer; bring a light jacket",
+        cta: "Join run",
+      },
+    ];
+    setPlan(picks);
+    setLog(steps);
+  };
+
+  return (
+    <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-gradient-to-br from-violet-50 to-white p-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-semibold">Agent-crafted plan</h3>
+        <button
+          onClick={run}
+          className="rounded-md bg-slate-900 text-white px-3 py-1.5 text-sm hover:bg-slate-800"
+        >
+          Generate
+        </button>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 gap-3">
+        {plan ? (
+          plan.map((p, i) => (
+            <div key={i} className="rounded-md border bg-white p-3">
+              <div className="font-medium">{p.title}</div>
+              <div className="text-slate-600 text-sm">{p.reason}</div>
+              <button className="mt-2 rounded border px-2 py-1 text-xs hover:bg-slate-50">
+                {p.cta}
+              </button>
+            </div>
+          ))
+        ) : (
+          <div className="text-slate-500 text-sm">
+            Press Generate to see tool-calls and a proposed plan.
+          </div>
+        )}
+      </div>
+
+      <div className="mt-auto">
+        <h4 className="text-xs font-semibold text-slate-500 mb-1">
+          Reasoning trace (simulated)
+        </h4>
+        <div className="rounded-md border bg-white p-2 h-24 overflow-auto text-xs text-slate-600">
+          {log.length ? (
+            <ul className="list-disc pl-5 space-y-1">
+              {log.map((l, i) => (
+                <li key={i}>{l}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>—</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
