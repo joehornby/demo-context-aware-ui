@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Squircle } from "corner-smoothing";
 
 type Action =
   | { type: "calendar"; title: string; when: string }
@@ -47,26 +48,28 @@ export function ConversationDemo() {
 
       <div className="mt-3 grid grid-cols-2 gap-3 h-full">
         <div className="rounded-md border bg-white p-3 flex flex-col">
-          <div className="text-xs text-stone-500 mb-1">Transcript</div>
+          <div className="text-xs text-stone-500 mb-2">Chat</div>
           <div className="flex flex-col gap-2 overflow-auto pr-1">
             {transcript.map((t, i) => {
               const isSelf = i % 2 === 1;
               return (
-                <div
+                <Squircle
                   key={i}
+                  cornerRadius={16}
+                  cornerSmoothing={0.88}
                   className={isSelf ? "flex justify-end" : "flex justify-start"}
                 >
                   <div
                     className={
                       (isSelf
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-stone-600 text-stone-50"
                         : "bg-stone-100 text-stone-800") +
                       " max-w-[75%] rounded-2xl px-3 py-2 text-sm shadow-sm"
                     }
                   >
                     {t}
                   </div>
-                </div>
+                </Squircle>
               );
             })}
           </div>
