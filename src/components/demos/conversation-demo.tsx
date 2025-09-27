@@ -9,6 +9,61 @@ type Action =
   | { type: "share"; to: string; filename?: string }
   | { type: "note"; text: string };
 
+function CalendarCard({ a }: { a: { title: string; when: string } }) {
+  const today = new Date();
+  const yyyy = String(today.getFullYear());
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const defaultDate = `${yyyy}-${mm}-${dd}`;
+  const timeMatch = a.when.match(/\b(\d{1,2}:\d{2})\b/i);
+  const defaultTime = timeMatch ? timeMatch[1] : "15:00";
+  const defaultInvitees = "Alex Johnson; Priya Patel; Sam Lee";
+
+  return (
+    <div className="border rounded p-2">
+      <div className="text-sm font-medium">New calendar event</div>
+      <div className="text-xs text-stone-600">{a.title} — {a.when}</div>
+
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <div className="col-span-2">
+          <label className="text-xs text-stone-600">Subject</label>
+          <input
+            type="text"
+            defaultValue={a.title}
+            className="mt-1 w-full rounded border border-stone-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400/30"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-stone-600">Date</label>
+          <input
+            type="date"
+            defaultValue={defaultDate}
+            className="mt-1 w-full rounded border border-stone-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400/30"
+          />
+        </div>
+        <div>
+          <label className="text-xs text-stone-600">Time</label>
+          <input
+            type="time"
+            defaultValue={defaultTime}
+            className="mt-1 w-full rounded border border-stone-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400/30"
+          />
+        </div>
+        <div className="col-span-2">
+          <label className="text-xs text-stone-600">Invitees</label>
+          <input
+            type="text"
+            defaultValue={defaultInvitees}
+            className="mt-1 w-full rounded border border-stone-200 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400/30"
+          />
+        </div>
+      </div>
+
+      <Button variant="outline" size="sm" className="mt-2">Add to calendar</Button>
+    </div>
+  );
+}
+
 export function ConversationDemo() {
   const [transcript, setTranscript] = useState<string[]>([]);
   const [actions, setActions] = useState<Action[]>([]);
@@ -76,21 +131,11 @@ export function ConversationDemo() {
         </div>
 
         <div className="rounded-md border bg-white p-3 flex flex-col">
-          <div className="text-xs text-stone-500 mb-1">Suggested actions</div>
+          <div className="text-xs text-stone-500 mb-2">Suggested actions</div>
           <div className="space-y-2">
             {actions.map((a, i) =>
               a.type === "calendar" ? (
-                <div key={i} className="border rounded p-2">
-                  <div className="text-sm font-medium">
-                    Create calendar event
-                  </div>
-                  <div className="text-xs text-stone-600">
-                    {a.title} — {a.when}
-                  </div>
-                  <Button variant="outline" size="sm" className="mt-2">
-                    Open editor
-                  </Button>
-                </div>
+                <CalendarCard key={i} a={a} />
               ) : a.type === "share" ? (
                 <div key={i} className="border rounded p-2">
                   <div className="text-sm font-medium">Share a file</div>
