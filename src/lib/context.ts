@@ -13,9 +13,7 @@ export function getInitialContext(): AppContext {
     ? "linkedin"
     : ref.includes("instagram")
     ? "instagram"
-    : ref
-    ? "other"
-    : "direct";
+    : "other";
 
   const now = new Date();
   return {
