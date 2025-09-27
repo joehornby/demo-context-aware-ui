@@ -113,7 +113,7 @@ export default function Page() {
           <>
             <p className="mb-4">
               Adjust density and priority based on driving context. City streets
-              emphasize safety cues and fewer distractors; highways allow more
+              emphasise safety cues and fewer distractors; highways allow more
               glanceable widgets; when stopped, unlock richer interactions.
             </p>
             <ul className="list-disc pl-6 space-y-2">
@@ -134,108 +134,48 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
-      <div className="px-4 md:px-8 py-8 md:py-12">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">
-          Content-Aware Interfaces
-        </h1>
-        <div className="text-slate-700 mb-8 space-y-3">
+      <div className="px-12 md:px-24 py-12 md:py-24 max-w-7/12 relative">
+        <div className="mb-8 space-y-8">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-24">
+            Content-Aware Interfaces
+          </h1>
           <p>
             In 2025, context-aware UIs are moving from novelty to norm. Advances
             in AI, sensors, and analytics let interfaces adapt in real-time to
             location, time of day, device, activity, and even
             conversation—meeting users where they are.
           </p>
-          <ul className="list-disc pl-6 text-slate-700">
+          <ul className="list-disc pl-6">
             <li>Better usability: fewer steps, less friction</li>
-            <li>Personalization: content that fits the moment</li>
+            <li>Personalisation: content that fits the moment</li>
             <li>Real-time adaptation: seamless updates as context changes</li>
             <li>Privacy and trust: transparent data use and consent</li>
             <li>Efficiency: faster paths in consumer and enterprise flows</li>
             <li>Natural interaction: voice, gaze, and zero-UI moments</li>
           </ul>
-          <p className="text-slate-500">
-            Principle: maximize user value—explain inferences, keep actions
-            reversible, and let users override or opt out anytime.
+          <p className="">
+            Principle: maximise user value &ndash; explain inferences, keep
+            actions reversible, and let users override or opt out anytime.
           </p>
-        </div>
 
-        <div className="relative">
-          {/* Left content: narrative (reserve space for fixed panel on small and large screens) */}
-          <div className="space-y-[40vh] pb-[52vh] lg:pb-[80vh] lg:pr-[520px]">
-            <Section
-              id="generative"
-              title="Generative UI"
-              ref={refs["generative"]}
-            >
-              <p className="mb-4">
-                Small agents with tool-calls stitch signals into helpful plans,
-                especially when simple rules fall short. They should explain
-                reasoning and offer alternatives.
-              </p>
-            </Section>
-            <Section id="referrer" title="What context?" ref={refs["referrer"]}>
-              <h3 className="text-lg font-semibold mb-2">Web app</h3>
-              <ul className="list-disc pl-6 mb-6 space-y-1">
-                <li>Location (IP or geolocation)</li>
-                <li>Time and timezone</li>
-                <li>Weather (via API)</li>
-                <li>HTTP referrer</li>
-                <li>User preferences and history</li>
-                <li>Device, network, language</li>
-              </ul>
-              <h3 className="text-lg font-semibold mb-2">In-car example</h3>
-              <ul className="list-disc pl-6 space-y-1">
-                <li>Speed, SoC, ADAS status</li>
-                <li>Location, ETA, traffic, calendar</li>
-                <li>Occupancy, music level, cabin temp</li>
-                <li>Driver attention</li>
-              </ul>
-            </Section>
-
-            <Section id="weather" title="So what?" ref={refs["weather"]}>
-              <p className="mb-4">
-                With context, we infer intent and choose the right UI variant.
-                Example: visitors from LinkedIn vs Instagram likely seek
-                different things. For day planning, combine weather, location,
-                and preferences to propose relevant actions that fit now.
-              </p>
-              <p>
-                In vehicles, modulate how much the UI competes for attention
-                based on driving conditions—prioritize safety in the city, and
-                unlock richer content when stopped.
-              </p>
-            </Section>
-
-            <Section
-              id="conversation"
-              title="Conversation context"
-              ref={refs["conversation"]}
-            >
-              <p>
-                Turn spoken intent into immediate UI affordances: calendar,
-                sharing, notes. Visible indicators and consent keep trust front
-                and center.
-              </p>
-            </Section>
-
-            {/* Deep-dive sections that drive the demos */}
-            {sections.map((sec) => (
-              <Section
-                key={sec.id}
-                id={sec.id}
-                title={sec.title}
-                ref={refs[sec.id]}
-              >
-                {sec.content}
-              </Section>
-            ))}
-            <Section id="intent" title="Intent-aware UI" ref={refs["intent"]}>
-              <p>Gaze + one control = quicker adjustments with less effort.</p>
-            </Section>
+          <div className="mt-40">
+            <div className="space-y-[50vh]">
+              {sections.map((sec) => (
+                <Section
+                  key={sec.id}
+                  id={sec.id}
+                  title={sec.title}
+                  ref={refs[sec.id]}
+                  className=""
+                >
+                  {sec.content}
+                </Section>
+              ))}
+            </div>
           </div>
 
           {/* Demo panel: fixed bottom on small screens, fixed right on large screens */}
-          <div className="fixed inset-x-0 bottom-0 h-[50vh] z-20 lg:inset-auto lg:fixed lg:top-4 lg:right-4 xl:right-8 lg:w-[480px] lg:h-[calc(100vh-2rem)]">
+          <div className="fixed inset-x-0 bottom-0 h-[50vh] z-20 lg:inset-auto lg:fixed lg:top-4 lg:right-4 lg:w-5/12 lg:h-[calc(100vh-2rem)]">
             <DemoPanel activeId={activeId} initialContext={initialContext} />
           </div>
         </div>
