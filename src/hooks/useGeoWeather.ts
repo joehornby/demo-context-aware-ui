@@ -63,11 +63,13 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
             geo = {
               city: data.city || undefined,
               country: data.country_name || data.country || undefined,
-              lat: typeof data.latitude === "number" ? data.latitude : undefined,
-              lon: typeof data.longitude === "number" ? data.longitude : undefined,
+              lat:
+                typeof data.latitude === "number" ? data.latitude : undefined,
+              lon:
+                typeof data.longitude === "number" ? data.longitude : undefined,
             };
           }
-        } catch (_) {}
+        } catch {}
 
         if (!geo) {
           try {
@@ -91,7 +93,7 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
                 lon,
               };
             }
-          } catch (_) {}
+          } catch {}
         }
 
         // 2) Fetch weather; prefer coordinates, fallback to city name search using open-meteo
@@ -105,7 +107,12 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
             url.searchParams.set("longitude", String(geo.lon));
             url.searchParams.set("current", "temperature_2m,weather_code");
             url.searchParams.set("hourly", "weather_code");
-            const res = await fetchWithTimeout(url.toString(), { timeoutMs: 5000 });
+            url.searchParams.set("timezone", "auto");
+            url.searchParams.set("timeformat", "unixtime");
+            url.searchParams.set("forecast_days", "1");
+            const res = await fetchWithTimeout(url.toString(), {
+              timeoutMs: 5000,
+            });
             if (res.ok) {
               const d = await res.json();
               const temp = d?.current?.temperature_2m;
@@ -115,7 +122,21 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
                 condition: mapConditionToBucket(text),
                 tempC: typeof temp === "number" ? Math.round(temp) : 18,
               };
-              const hourlyCodes: number[] | undefined = d?.hourly?.weather_code;
+              let hourlyCodes: number[] | undefined = d?.hourly?.weather_code;
+              const hourlyTimes: number[] | undefined = d?.hourly?.time;
+              const currentTime: number | undefined = d?.current?.time;
+              if (
+                Array.isArray(hourlyCodes) &&
+                Array.isArray(hourlyTimes) &&
+                typeof currentTime === "number"
+              ) {
+                const startIdx = hourlyTimes.findIndex(
+                  (t) => typeof t === "number" && t >= currentTime
+                );
+                if (startIdx >= 0) {
+                  hourlyCodes = hourlyCodes.slice(startIdx);
+                }
+              }
               outlook = computeOutlookFromCodes(code, hourlyCodes);
             }
           }
@@ -123,10 +144,14 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
           // Fallback: use city name with open-meteo geocoding
           if (!weather && (geo?.city || geo?.country)) {
             const q = [geo?.city, geo?.country].filter(Boolean).join(", ");
-            const geocode = new URL("https://geocoding-api.open-meteo.com/v1/search");
+            const geocode = new URL(
+              "https://geocoding-api.open-meteo.com/v1/search"
+            );
             geocode.searchParams.set("name", q);
             geocode.searchParams.set("count", "1");
-            const gRes = await fetchWithTimeout(geocode.toString(), { timeoutMs: 5000 });
+            const gRes = await fetchWithTimeout(geocode.toString(), {
+              timeoutMs: 5000,
+            });
             if (gRes.ok) {
               const g = await gRes.json();
               const item = g?.results?.[0];
@@ -136,7 +161,12 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
                 url.searchParams.set("longitude", String(item.longitude));
                 url.searchParams.set("current", "temperature_2m,weather_code");
                 url.searchParams.set("hourly", "weather_code");
-                const res = await fetchWithTimeout(url.toString(), { timeoutMs: 5000 });
+                url.searchParams.set("timezone", "auto");
+                url.searchParams.set("timeformat", "unixtime");
+                url.searchParams.set("forecast_days", "1");
+                const res = await fetchWithTimeout(url.toString(), {
+                  timeoutMs: 5000,
+                });
                 if (res.ok) {
                   const d = await res.json();
                   const temp = d?.current?.temperature_2m;
@@ -146,13 +176,28 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
                     condition: mapConditionToBucket(text),
                     tempC: typeof temp === "number" ? Math.round(temp) : 18,
                   };
-                  const hourlyCodes: number[] | undefined = d?.hourly?.weather_code;
+                  let hourlyCodes: number[] | undefined =
+                    d?.hourly?.weather_code;
+                  const hourlyTimes: number[] | undefined = d?.hourly?.time;
+                  const currentTime: number | undefined = d?.current?.time;
+                  if (
+                    Array.isArray(hourlyCodes) &&
+                    Array.isArray(hourlyTimes) &&
+                    typeof currentTime === "number"
+                  ) {
+                    const startIdx = hourlyTimes.findIndex(
+                      (t) => typeof t === "number" && t >= currentTime
+                    );
+                    if (startIdx >= 0) {
+                      hourlyCodes = hourlyCodes.slice(startIdx);
+                    }
+                  }
                   outlook = computeOutlookFromCodes(code, hourlyCodes);
                 }
               }
             }
           }
-        } catch (_) {}
+        } catch {}
 
         if (!cancelled) {
           setState({
@@ -163,9 +208,10 @@ export function useGeoWeather(initial: AppContext | null = null): Result {
             outlook: outlook ?? null,
           });
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!cancelled) {
-          setState((s) => ({ ...s, loading: false, error: err?.message ?? "Unknown error" }));
+          const message = err instanceof Error ? err.message : "Unknown error";
+          setState((s) => ({ ...s, loading: false, error: message }));
         }
       }
     }
