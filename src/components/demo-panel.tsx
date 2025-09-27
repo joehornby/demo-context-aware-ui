@@ -22,7 +22,7 @@ export function DemoPanel({ activeId, initialContext }: Props) {
       cornerSmoothing={0.88}
       className="h-full bg-white/70 backdrop-blur p-12"
     >
-      <div className="relative h-[calc(100%-1.75rem)] overflow-hidden">
+      <div className="relative h-full overflow-y-scroll">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeId}
