@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${saans.variable} antialiased`}>{children}</body>
+      <body className={`${saans.className} antialiased`}>{children}</body>
     </html>
   );
 }
