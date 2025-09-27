@@ -50,7 +50,7 @@ export function ReferrerDemo({ context }: Props) {
     <div className="flex h-full flex-col overflow-visible">
       {/* Selector */}
       <div className="mb-4">
-        <div className="text-xs text-slate-500 mb-1">
+        <div className="text-xs text-stone-500 mb-1">
           Simulate the site you just came from
         </div>
         <Squircle
@@ -73,7 +73,7 @@ export function ReferrerDemo({ context }: Props) {
         <Squircle
           cornerRadius={16}
           cornerSmoothing={0.88}
-          className="mt-2 rounded-md border border-slate-200 bg-stone-200 p-3 font-mono text-[11px] leading-5 text-slate-700 whitespace-pre"
+          className="mt-2 rounded-md border border-stone-200 bg-stone-200 p-3 font-mono text-[11px] leading-5 text-stone-700 whitespace-pre"
         >
           {`GET / HTTP/1.1\nHost: ${
             typeof window !== "undefined" ? window.location.host : "example.com"
@@ -83,32 +83,32 @@ export function ReferrerDemo({ context }: Props) {
 
       {/* Tiny browser mock */}
       <Card className="overflow-hidden mb-3 shadow-none">
-        <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-50">
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-stone-200 bg-stone-50">
           <div className="flex gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-red-400"></span>
             <span className="h-2.5 w-2.5 rounded-full bg-yellow-400"></span>
             <span className="h-2.5 w-2.5 rounded-full bg-green-400"></span>
           </div>
-          <div className="ml-2 text-xs font-medium text-slate-700">
+          <div className="ml-2 text-xs font-medium text-stone-700">
             {effectiveReferrer === "linkedin"
               ? "My Portfolio and CV"
               : effectiveReferrer === "instagram"
               ? "My Services and Products"
               : "My Holding Page"}
           </div>
-          <div className="ml-auto text-[10px] text-slate-400">
+          <div className="ml-auto text-[10px] text-stone-400">
             referrer: {effectiveReferrer}
           </div>
         </div>
 
         <CardContent className="p-4">
           <h3 className="text-xl font-semibold mb-2">{copy.title}</h3>
-          <p className="text-slate-600 mb-4">{copy.body}</p>
+          <p className="text-stone-600 mb-4">{copy.body}</p>
           <Button size="sm">{copy.cta}</Button>
         </CardContent>
       </Card>
 
-      <div className="mt-auto text-xs text-slate-500">
+      <div className="mt-auto text-xs text-stone-500">
         Detected referrer:{" "}
         <span className="font-medium">{context.referrer}</span>
         <span className="mx-1">•</span>

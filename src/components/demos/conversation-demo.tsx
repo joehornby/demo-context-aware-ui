@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 type Action =
   | { type: "calendar"; title: string; when: string }
@@ -31,10 +32,7 @@ export function ConversationDemo() {
           ]);
         }
         if (line.toLowerCase().includes("file")) {
-          setActions((a) => [
-            ...a,
-            { type: "share", to: "alex@example.com" },
-          ]);
+          setActions((a) => [...a, { type: "share", to: "alex@example.com" }]);
         }
       } else {
         clearInterval(id);
@@ -44,13 +42,13 @@ export function ConversationDemo() {
   }, []);
 
   return (
-    <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-gradient-to-br from-rose-50 to-white p-4">
+    <div className="flex h-full flex-col rounded-lg border border-stone-200 bg-gradient-to-br from-rose-50 to-white p-4">
       <h3 className="text-xl font-semibold">Live conversation → actions</h3>
 
       <div className="mt-3 grid grid-cols-2 gap-3 h-full">
         <div className="rounded-md border bg-white p-3 flex flex-col">
-          <div className="text-xs text-slate-500 mb-1">Transcript</div>
-          <div className="text-sm text-slate-700 space-y-1 overflow-auto">
+          <div className="text-xs text-stone-500 mb-1">Transcript</div>
+          <div className="text-sm text-stone-700 space-y-1 overflow-auto">
             {transcript.map((t, i) => (
               <div key={i}>• {t}</div>
             ))}
@@ -58,9 +56,7 @@ export function ConversationDemo() {
         </div>
 
         <div className="rounded-md border bg-white p-3 flex flex-col">
-          <div className="text-xs text-slate-500 mb-1">
-            Suggested actions
-          </div>
+          <div className="text-xs text-stone-500 mb-1">Suggested actions</div>
           <div className="space-y-2">
             {actions.map((a, i) =>
               a.type === "calendar" ? (
@@ -68,35 +64,33 @@ export function ConversationDemo() {
                   <div className="text-sm font-medium">
                     Create calendar event
                   </div>
-                  <div className="text-xs text-slate-600">
+                  <div className="text-xs text-stone-600">
                     {a.title} — {a.when}
                   </div>
-                  <button className="mt-2 rounded border px-2 py-1 text-xs hover:bg-slate-50">
+                  <Button variant="outline" size="sm" className="mt-2">
                     Open editor
-                  </button>
+                  </Button>
                 </div>
               ) : a.type === "share" ? (
                 <div key={i} className="border rounded p-2">
                   <div className="text-sm font-medium">Share a file</div>
-                  <div className="text-xs text-slate-600">
+                  <div className="text-xs text-stone-600">
                     Recipient: {a.to}
                   </div>
-                  <button className="mt-2 rounded border px-2 py-1 text-xs hover:bg-slate-50">
+                  <Button variant="outline" size="sm" className="mt-2">
                     Upload & send
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div key={i} className="border rounded p-2">
                   <div className="text-sm font-medium">Note</div>
-                  <div className="text-xs text-slate-600">{a.text}</div>
+                  <div className="text-xs text-stone-600">{a.text}</div>
                 </div>
-              ),
+              )
             )}
-            {!actions.length && (
-              <div className="text-xs text-slate-500">—</div>
-            )}
+            {!actions.length && <div className="text-xs text-stone-500">—</div>}
           </div>
-          <p className="mt-auto text-xs text-slate-500">
+          <p className="mt-auto text-xs text-stone-500">
             With consent, speech-to-intent can prefill components to reduce
             clicks. Always show indicators and allow opt-out.
           </p>
