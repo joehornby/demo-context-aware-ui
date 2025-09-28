@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Squircle } from "corner-smoothing";
+import { AnimatePresence, motion } from "motion/react";
 
 type Action =
   | { type: "calendar"; title: string; when: string }
@@ -22,7 +23,9 @@ function CalendarCard({ a }: { a: { title: string; when: string } }) {
   return (
     <div className="border rounded p-2">
       <div className="text-sm font-medium">New calendar event</div>
-      <div className="text-xs text-stone-600">{a.title} — {a.when}</div>
+      <div className="text-xs text-stone-600">
+        {a.title} — {a.when}
+      </div>
 
       <div className="mt-2 grid grid-cols-2 gap-2">
         <div className="col-span-2">
@@ -59,7 +62,9 @@ function CalendarCard({ a }: { a: { title: string; when: string } }) {
         </div>
       </div>
 
-      <Button variant="outline" size="sm" className="mt-2">Add to calendar</Button>
+      <Button variant="outline" size="sm" className="mt-2">
+        Add to calendar
+      </Button>
     </div>
   );
 }
@@ -91,8 +96,8 @@ export function ConversationDemo() {
   // Simulate incoming transcript
   useEffect(() => {
     const lines = [
-      "Let's meet at 3pm for 30 minutes.",
-      "Can you put it in the calendar?",
+      "Let's meet at 3 for half an hour.",
+      "I'll put it in the calendar",
       "Also send me that file after the call.",
     ];
     let i = 0;
@@ -101,7 +106,7 @@ export function ConversationDemo() {
         const line = lines[i++];
         setTranscript((t) => [...t, line]);
         // naive intent detection
-        if (line.toLowerCase().includes("calendar")) {
+        if (line.toLowerCase().includes("meet")) {
           setActions((a) => [
             ...a,
             { type: "calendar", title: "Sync @ 3pm", when: "Today 15:00" },
@@ -125,28 +130,39 @@ export function ConversationDemo() {
         <div className="rounded-md border bg-white p-3 flex flex-col">
           <div className="text-xs text-stone-500 mb-2">Chat</div>
           <div className="flex flex-col gap-2 overflow-auto pr-1">
-            {transcript.map((t, i) => {
-              const isSelf = i % 2 === 1;
-              return (
-                <Squircle
-                  key={i}
-                  cornerRadius={16}
-                  cornerSmoothing={0.88}
-                  className={isSelf ? "flex justify-end" : "flex justify-start"}
-                >
-                  <div
-                    className={
-                      (isSelf
-                        ? "bg-stone-600 text-stone-50"
-                        : "bg-stone-100 text-stone-800") +
-                      " max-w-[75%] rounded-2xl px-3 py-2 text-sm shadow-sm"
-                    }
+            <AnimatePresence initial={false}>
+              {transcript.map((t, i) => {
+                const isSelf = i % 2 === 1;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ y: 8, scale: 0.98, opacity: 0 }}
+                    animate={{ y: 0, scale: 1, opacity: 1 }}
+                    exit={{ y: -8, scale: 0.98, opacity: 0 }}
+                    transition={{ duration: 0.11, ease: "easeOut" }}
                   >
-                    {t}
-                  </div>
-                </Squircle>
-              );
-            })}
+                    <Squircle
+                      cornerRadius={16}
+                      cornerSmoothing={0.88}
+                      className={
+                        isSelf ? "flex justify-end" : "flex justify-start"
+                      }
+                    >
+                      <div
+                        className={
+                          (isSelf
+                            ? "bg-stone-600 text-stone-50"
+                            : "bg-stone-100 text-stone-800") +
+                          " max-w-[75%] rounded-2xl px-3 py-2 text-sm shadow-sm"
+                        }
+                      >
+                        {t}
+                      </div>
+                    </Squircle>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           </div>
         </div>
 
