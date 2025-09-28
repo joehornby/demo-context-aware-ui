@@ -153,13 +153,23 @@ export default function Page() {
       <div className="px-12 md:px-24 py-12 md:py-24 max-w-prose lg:max-w-7/12 relative">
         <div className="mb-[70vh] space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-24">
-            Content-Aware Interfaces
+            Context-Aware Interfaces
           </h1>
           <p>
             In 2025, context-aware UIs are moving from novelty to norm. Advances
             in AI, sensors, and analytics let interfaces adapt in real-time to
             location, time of day, device, activity, and even
-            conversation—meeting users where they are.
+            conversation—meeting users where they are
+          </p>
+          <p>
+            While we have been able to use simple context-dependent interfaces
+            for some time, LLM tool calling can potentially provide more control
+            of deterministic and probabilistic elements of the interface and
+            intelligently render the right UI at the right time.
+          </p>
+          <p>
+            Following are some micro demos that illustrate what elements could
+            be combined for intelligent context- and intent-aware UIs.
           </p>
           <ul className="list-disc pl-6">
             <li>Efficient usability: fewer steps, less friction</li>
