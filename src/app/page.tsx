@@ -105,14 +105,17 @@ export default function Page() {
         content: (
           <>
             <p className="mb-4">
-              Combine eye tracking (e.g., webgazer.js) with a single dial and a
-              push button. The dial acts on whatever you look at: glance at the
-              temperature tile and turn to adjust; glance at the player and turn
-              to change volume. It’s faster, safer, and lowers cognitive load.
+              Combining two modes of interaction could help understand the
+              user&apos;s intent. In this demo, eye tracking and a physical
+              input (keyboard arrow keys) are combined to change the control you
+              are looking at. After some calibration with the camera eye
+              tracking system (webgazer.js), look at the temperature tile and
+              use arrow keys to adjust; glance at the music player use the same
+              keys to change volume.
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Look at temperature → turn → adjust temp</li>
-              <li>Look at music → turn → adjust volume</li>
+              <li>Look at temperature → press up or down keys → adjust temp</li>
+              <li>Look at music → press up or down keys → adjust volume</li>
               <li>Fallback: hover/focus when gaze isn’t available</li>
             </ul>
           </>
@@ -124,13 +127,14 @@ export default function Page() {
         content: (
           <>
             <p className="mb-4">
-              Adjust density and priority based on driving context. City streets
-              emphasise safety cues and fewer distractors; highways allow more
-              glanceable widgets; when stopped, unlock richer interactions.
+              Using knowledge of the current driving scenario, we could adjust
+              the density and priority of the UI. City streets emphasise safety
+              cues and fewer distractors; motorways allow more glanceable
+              widgets; when stopped, unlock richer interactions.
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>City: high-alert UI, fewer distractions</li>
-              <li>Highway: glanceable widgets</li>
+              <li>Motorway: glanceable widgets</li>
               <li>Stopped: richer interactions unlocked</li>
             </ul>
           </>
@@ -146,8 +150,8 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
-      <div className="px-12 md:px-24 py-12 md:py-24 max-w-7/12 relative">
-        <div className="mb-8 space-y-8">
+      <div className="px-12 md:px-24 py-12 md:py-24 max-w-prose lg:max-w-7/12 relative">
+        <div className="mb-[70vh] space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-24">
             Content-Aware Interfaces
           </h1>
@@ -158,12 +162,22 @@ export default function Page() {
             conversation—meeting users where they are.
           </p>
           <ul className="list-disc pl-6">
-            <li>Better usability: fewer steps, less friction</li>
+            <li>Efficient usability: fewer steps, less friction</li>
             <li>Personalisation: content that fits the moment</li>
             <li>Real-time adaptation: seamless updates as context changes</li>
             <li>Privacy and trust: transparent data use and consent</li>
-            <li>Efficiency: faster paths in consumer and enterprise flows</li>
             <li>Natural interaction: voice, gaze, and zero-UI moments</li>
+            <li>
+              Reduced{" "}
+              <a
+                href="https://arxiv.org/pdf/2309.14459"
+                className="underline underline-offset-4 decoration-stone-400 hover:decoration-stone-800"
+              >
+                gulf of envisioning
+              </a>
+              : offer functionality to the user without requiring them to know
+              what&apos;s possible
+            </li>
           </ul>
           <p className="">
             Principle: maximise user value &ndash; explain inferences, keep
