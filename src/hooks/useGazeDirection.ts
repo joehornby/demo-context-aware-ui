@@ -34,8 +34,22 @@ type Return = {
 
 declare global {
   interface Window {
-    webgazer?: any;
+    webgazer?: WebGazerAPI;
   }
+}
+
+interface WebGazerAPI {
+  showVideo(v: boolean): WebGazerAPI;
+  showFaceOverlay(v: boolean): WebGazerAPI;
+  showFaceFeedbackBox(v: boolean): WebGazerAPI;
+  showPredictionPoints(v: boolean): WebGazerAPI;
+  setGazeListener(
+    cb: (data: { x?: number | null } | null) => void
+  ): WebGazerAPI;
+  begin(): Promise<void>;
+  clearGazeListener?: () => void;
+  pause?: () => void;
+  end(): Promise<void>;
 }
 
 function loadWebgazerScript(): Promise<void> {
@@ -172,7 +186,13 @@ export function useGazeDirection(options: Options = {}): Return {
       // silently fail; caller can keep hover fallback
       console.warn("webgazer failed to start", e);
     }
-  }, [computeDirection, pushSample]);
+  }, [
+    computeDirection,
+    pushSample,
+    adaptiveCenter,
+    centerAlpha,
+    positionAlpha,
+  ]);
 
   const stop = useCallback(async () => {
     setEnabled(false);
@@ -210,7 +230,7 @@ export function useGazeDirection(options: Options = {}): Return {
         const s = m.srcObject as MediaStream | null;
         if (s) {
           for (const t of s.getTracks()) t.stop();
-          m.srcObject = null as any;
+          m.srcObject = null;
           streamsRef.current.add(s);
         }
       }
