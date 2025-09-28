@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Thermometer, Music } from "lucide-react";
 import { useGazeDirection } from "@/hooks/useGazeDirection";
 
 type Target = "temperature" | "music" | null;
@@ -123,7 +124,8 @@ export function IntentDemo() {
             {step === "intro" && (
               <div className="mt-12 max-w-2xl">
                 <p className="mb-4">
-                  This demo uses your camera locally to estimate gaze position. Nothing is sent to a server.
+                  This demo uses your camera locally to estimate gaze position.
+                  Nothing is sent to a server.
                 </p>
                 <Button
                   onClick={async () => {
@@ -145,7 +147,7 @@ export function IntentDemo() {
                 <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/80 px-3 py-2 rounded border text-base">
                   Click the green dot ({Math.min(calPoints, 5)} / 5)
                 </div>
-                {( ["tl", "tr", "c", "bl", "br"] as const).map((pos, idx) => {
+                {(["tl", "tr", "c", "bl", "br"] as const).map((pos, idx) => {
                   const coords = (
                     pos === "tl"
                       ? { top: 24, left: 24 }
@@ -201,9 +203,6 @@ export function IntentDemo() {
             {step === "demo" && (
               <div className="mt-8">
                 <div className="mb-4 flex items-center gap-3">
-                  <span className="text-xs text-stone-500">
-                    Gaze: {direction}
-                  </span>
                   <Button size="sm" variant="outline" onClick={recenter}>
                     Recenter
                   </Button>
@@ -218,34 +217,45 @@ export function IntentDemo() {
                     Disable camera
                   </Button>
                 </div>
+                <p className="text-base text-stone-500 my-8">Gaze: {direction}</p>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div
-                    className={`rounded-lg border p-6 h-[50vh] ${
+                    className={`rounded-lg border p-6 h-[50vh] flex items-center justify-center text-center ${
                       target === "temperature"
                         ? "ring-2 ring-emerald-400 border-emerald-300"
                         : "border-stone-200"
                     }`}
                     onMouseEnter={() => setTarget("temperature")}
                   >
-                    <div className="text-stone-500">Temperature</div>
-                    <div className="text-5xl font-semibold mt-2">{temp}°C</div>
-                    <div className="mt-6 text-xs text-stone-500">
-                      Use ↑/↓ to adjust
+                    <div>
+                      <Thermometer className="mx-auto mb-3 text-stone-400" />
+                      <div className="text-stone-500">Temperature</div>
+                      <div className="text-5xl font-semibold mt-2">
+                        {temp}°C
+                      </div>
+                      <div className="mt-6 text-xs text-stone-500">
+                        Use ↑/↓ to adjust
+                      </div>
                     </div>
                   </div>
                   <div
-                    className={`rounded-lg border p-6 h-[50vh] ${
+                    className={`rounded-lg border p-6 h-[50vh] flex items-center justify-center text-center ${
                       target === "music"
                         ? "ring-2 ring-emerald-400 border-emerald-300"
                         : "border-stone-200"
                     }`}
                     onMouseEnter={() => setTarget("music")}
                   >
-                    <div className="text-stone-500">Music volume</div>
-                    <div className="text-5xl font-semibold mt-2">{volume}%</div>
-                    <div className="mt-6 text-xs text-stone-500">
-                      Use ↑/↓ to adjust
+                    <div>
+                      <Music className="mx-auto mb-3 text-stone-400" />
+                      <div className="text-stone-500">Music volume</div>
+                      <div className="text-5xl font-semibold mt-2">
+                        {volume}%
+                      </div>
+                      <div className="mt-6 text-xs text-stone-500">
+                        Use ↑/↓ to adjust
+                      </div>
                     </div>
                   </div>
                 </div>
