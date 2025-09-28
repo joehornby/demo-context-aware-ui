@@ -76,7 +76,7 @@ export function IntentDemo() {
     <div className="flex h-full flex-col">
       <h3 className="text-xl font-semibold">Look → Turn → Adjust</h3>
 
-      <div className="mt-2">
+      <div className="mt-8">
         <Button
           onClick={() => {
             setIsOpen(true);
@@ -209,7 +209,12 @@ export function IntentDemo() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setStep("calibrate")}
+                    onClick={() => {
+                      setCalPoints(0);
+                      setCalIndex(0);
+                      recenter();
+                      setStep("calibrate");
+                    }}
                   >
                     Recalibrate
                   </Button>
@@ -219,7 +224,7 @@ export function IntentDemo() {
                 </div>
                 <p className="text-base text-stone-500 my-8">Gaze: {direction}</p>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-12">
                   <div
                     className={`rounded-lg border p-6 h-[50vh] flex items-center justify-center text-center ${
                       target === "temperature"
