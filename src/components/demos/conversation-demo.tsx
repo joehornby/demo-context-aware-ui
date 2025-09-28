@@ -92,6 +92,15 @@ function ShareDropzoneCard({ a }: { a: { to: string; filename?: string } }) {
 export function ConversationDemo() {
   const [transcript, setTranscript] = useState<string[]>([]);
   const [actions, setActions] = useState<Action[]>([]);
+  const [actionsLoadingCount, setActionsLoadingCount] = useState(0);
+
+  function scheduleAction(action: Action) {
+    setActionsLoadingCount((c) => c + 1);
+    setTimeout(() => {
+      setActions((a) => [...a, action]);
+      setActionsLoadingCount((c) => Math.max(0, c - 1));
+    }, 1000);
+  }
 
   // Simulate incoming transcript
   useEffect(() => {
@@ -107,13 +116,14 @@ export function ConversationDemo() {
         setTranscript((t) => [...t, line]);
         // naive intent detection
         if (line.toLowerCase().includes("meet")) {
-          setActions((a) => [
-            ...a,
-            { type: "calendar", title: "Sync @ 3pm", when: "Today 15:00" },
-          ]);
+          scheduleAction({
+            type: "calendar",
+            title: "Sync @ 3pm",
+            when: "Today 15:00",
+          });
         }
         if (line.toLowerCase().includes("file")) {
-          setActions((a) => [...a, { type: "share", to: "alex@example.com" }]);
+          scheduleAction({ type: "share", to: "alex@example.com" });
         }
       } else {
         clearInterval(id);
@@ -181,7 +191,19 @@ export function ConversationDemo() {
                 </div>
               )
             )}
-            {!actions.length && <div className="text-xs text-stone-500">—</div>}
+            {actionsLoadingCount > 0 &&
+              Array.from({ length: actionsLoadingCount }).map((_, i) => (
+                <div
+                  key={"pending-" + i}
+                  className="flex items-center gap-2 text-xs text-stone-500"
+                >
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-stone-300 border-t-stone-500" />
+                  Loading suggestion…
+                </div>
+              ))}
+            {actions.length === 0 && actionsLoadingCount === 0 && (
+              <div className="text-xs text-stone-500">—</div>
+            )}
           </div>
           <p className="mt-auto text-xs text-stone-500">
             With consent, speech-to-intent can prefill components to reduce
