@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { DemoPanel } from "@/components/demo-panel";
+import AxisDiagram from "@/components/axis-diagram";
 import { Section } from "@/components/section";
 import { useSectionObserver } from "@/hooks/useSectionObserver";
 import { getInitialContext, type AppContext } from "@/lib/context";
@@ -153,53 +154,68 @@ export default function Page() {
       <div className="px-12 md:px-24 py-12 md:py-24 max-w-prose lg:max-w-7/12 relative">
         <div className="mb-[70vh] space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-24">
-            Context-Aware Interfaces
+            Thoughts on Context-Aware Interfaces
           </h1>
-          <p>
-            We&apos;ve had simple context-dependent interfaces for years: screen
-            brightness adapting to ambient light, location-based weather,
-            styling from user preferences or accessibility settings, or
-            Citymapper&apos;s giant “Get me home” button late at night.
-          </p>
-          <p>
-            Beyond raw device data and settings, machine-learning-powered
-            personalisation is also commonplace: suggesting my bus ticket app at
-            the bus stop; Siri suggestions showing my favourite music and
-            podcast apps when I connect my AirPods; Google Search adapting
-            results to my observed preferences and historical patterns.
-          </p>
-          <p>
-            While we have been able to use simple context-dependent interfaces
-            for some time, LLM tool calling can potentially provide more control
-            of deterministic and probabilistic elements of the interface and
-            intelligently render the right UI at the right time.
-          </p>
-          <p>
-            Following are some micro demos that illustrate what elements could
-            be combined for intelligent context- and intent-aware UIs.
-          </p>
-          <ul className="list-disc pl-6">
-            <li>Efficient usability: fewer steps, less friction</li>
-            <li>Personalisation: content that fits the moment</li>
-            <li>Real-time adaptation: seamless updates as context changes</li>
-            <li>Privacy and trust: transparent data use and consent</li>
-            <li>Natural interaction: voice, gaze, and zero-UI moments</li>
+          <ul className="list-disc pl-6  space-y-2">
             <li>
-              Reduced{" "}
-              <a
-                href="https://arxiv.org/pdf/2309.14459"
-                className="underline underline-offset-4 decoration-stone-400 hover:decoration-stone-800"
-              >
-                gulf of envisioning
-              </a>
-              : offer functionality to the user without requiring them to know
-              what&apos;s possible
+              We&apos;ve had context-aware UI for years (brightness, weather
+              cards, OS prefs, Citymapper&apos;s giant “Get me home” button late
+              at night).
+            </li>
+            <li>
+              ML personalization made it adaptive (app suggestions, Siri/Google
+              nudges), but mostly as nudges, not composing flows.
+            </li>
+            <li>
+              Generative UI is the next step: an agent blends probabilistic
+              intent + deterministic tool calls and workflows to render the
+              right micro-UI at the right time, with reasons and overrides.
             </li>
           </ul>
-          <p className="">
-            Principle: maximise user value &ndash; explain inferences, keep
-            actions reversible, and let users override or opt out anytime.
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight mb-4">
+            Why it matters (user value)
+          </h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>Fewer steps, less friction</li>
+            <li>Content that fits the moment</li>
+            <li>Real-time adaptation without manual tuning</li>
+            <li>Transparent data use and consent</li>
+            <li>Natural interactions (voice, gaze, zero-UI)</li>
+            <li>
+              Reduced &quot;gulf of envisioning&quot; (surface what&apos;s
+              possible)
+            </li>
+            <li>
+              Principle: explain inferences, keep actions reversible, always
+              allow override/opt-out
+            </li>
+          </ul>
+
+          <h2 className="text-2xl font-bold tracking-tight mb-4">AI Agents</h2>
+
+          <AxisDiagram />
+
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Agent</strong>: To create an agent, an LLM is given tools
+              (basically functions it is able to call to expand its capability).
+              LLM chooses which “tool” to call, e.g. search web, apply focus
+              mode, just answer a question, when to generate an answer vs call a
+              tool. Non-deterministic &ndash; LLM decides what to do. We lose a
+              lot of predictability. Future of general intelligence is probably
+              quite an agentic one &ndash; the LLM is smart enough to handle the
+              control flow for you and you don&apos;t need to put workflows on
+              top of it to stitch it together.
+            </li>
+            <li>
+              <strong>Workflow</strong>: A workflow is a sequence of steps that
+              are executed in order. It is deterministic and predictable. We can
+              apply workflows to make the system more deterministic, i.e. reduce
+              the decision space of the LLM, and combine tool calls (or actions)
+              into workflows. Better for actions that require a deterministic
+              outcome, like a system that needs to do one thing and do it well.
+            </li>
+          </ul>
 
           <div className="mt-40">
             <div className="space-y-[50vh]">
