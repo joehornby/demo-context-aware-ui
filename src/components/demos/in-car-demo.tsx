@@ -39,7 +39,7 @@ export function InCarDemo() {
       </div>
 
       {/* Vehicle screen mockup */}
-      <div className="mt-4 flex w-full justify-center">
+      <div className="mt-4 flex w-[95%] justify-center">
         <div className="w-full max-w-3xl">
           <div className="relative aspect-video">
             {/* Side mounts (decorative) */}
