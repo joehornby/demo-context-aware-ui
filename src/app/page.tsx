@@ -18,7 +18,7 @@ export default function Page() {
               Move beyond static rules like “location → local info.” A small
               agent can call tools (weather, maps, calendar, events) and compose
               a plan that fits right now. When signals are partial or noisy,
-              probabilistic inference fills gaps—while showing its work so the
+              probabilistic inference fills gaps, while showing its work so the
               user can override.
             </p>
             <ul className="list-disc pl-6 space-y-2">
@@ -68,7 +68,7 @@ export default function Page() {
             <p className="mb-4">
               Combine local time, location, and forecast to suggest activities
               that fit the moment. Real-time adaptation keeps suggestions
-              relevant as conditions change—without the user hunting through
+              relevant as conditions change, without the user hunting through
               menus.
             </p>
             <ul className="list-disc pl-6 space-y-2">
@@ -156,10 +156,17 @@ export default function Page() {
             Context-Aware Interfaces
           </h1>
           <p>
-            In 2025, context-aware UIs are moving from novelty to norm. Advances
-            in AI, sensors, and analytics let interfaces adapt in real-time to
-            location, time of day, device, activity, and even
-            conversation—meeting users where they are
+            We&apos;ve had simple context-dependent interfaces for years: screen
+            brightness adapting to ambient light, location-based weather,
+            styling from user preferences or accessibility settings, or
+            Citymapper&apos;s giant “Get me home” button late at night.
+          </p>
+          <p>
+            Beyond raw device data and settings, machine-learning-powered
+            personalisation is also commonplace: suggesting my bus ticket app at
+            the bus stop; Siri suggestions showing my favourite music and
+            podcast apps when I connect my AirPods; Google Search adapting
+            results to my observed preferences and historical patterns.
           </p>
           <p>
             While we have been able to use simple context-dependent interfaces
