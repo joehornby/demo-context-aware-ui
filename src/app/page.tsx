@@ -6,6 +6,14 @@ import AxisDiagram from "@/components/axis-diagram";
 import { Section } from "@/components/section";
 import { useSectionObserver } from "@/hooks/useSectionObserver";
 import { getInitialContext, type AppContext } from "@/lib/context";
+import Image from "next/image";
+import agent1 from "@/app/assets/agent-1.svg";
+import agent2 from "@/app/assets/agent-2.svg";
+import agent3 from "@/app/assets/agent-3.svg";
+import agent4 from "@/app/assets/agent-4.svg";
+import agent5 from "@/app/assets/agent-5.svg";
+import agent6 from "@/app/assets/agent-6.svg";
+import agent7 from "@/app/assets/agent-7.svg";
 
 export default function Page() {
   const sections = useMemo(
@@ -145,7 +153,12 @@ export default function Page() {
     []
   );
 
-  const { refs, activeId } = useSectionObserver(sections.map((s) => s.id));
+  const { refs, activeId, hasReachedFirst } = useSectionObserver(
+    sections.map((s) => s.id)
+  );
+
+  // Ensure the first visible panel is the first demo when we've reached the demo area
+  const panelActiveId = hasReachedFirst ? activeId || sections[0].id : "";
 
   const initialContext: AppContext = useMemo(() => getInitialContext(), []);
 
@@ -197,25 +210,115 @@ export default function Page() {
 
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Agent</strong>: To create an agent, an LLM is given tools
-              (basically functions it is able to call to expand its capability).
-              LLM chooses which “tool” to call, e.g. search web, apply focus
-              mode, just answer a question, when to generate an answer vs call a
-              tool. Non-deterministic &ndash; LLM decides what to do. We lose a
-              lot of predictability. Future of general intelligence is probably
-              quite an agentic one &ndash; the LLM is smart enough to handle the
-              control flow for you and you don&apos;t need to put workflows on
-              top of it to stitch it together.
+              <strong>Agent</strong> (LLM-drive, &quot;slippy hands&quot;)
+              <ul>
+                <li>
+                  Probabilistic control flow: the LLM chooses which tool to call
+                  and when.
+                </li>
+                <li>
+                  Flexibile, exploratory, good under ambiguity and open-ended
+                  goals.
+                </li>
+                <li>
+                  Trade off: less predictable, harder to test and guarantee
+                  outcomes.
+                </li>
+              </ul>
             </li>
             <li>
-              <strong>Workflow</strong>: A workflow is a sequence of steps that
-              are executed in order. It is deterministic and predictable. We can
-              apply workflows to make the system more deterministic, i.e. reduce
-              the decision space of the LLM, and combine tool calls (or actions)
-              into workflows. Better for actions that require a deterministic
-              outcome, like a system that needs to do one thing and do it well.
+              <strong>Workflow</strong> (deterministic, &quot;iron grip&quot;)
+              <ul>
+                <li>
+                  Predefined sequence of steps: predictable and repeatable.
+                </li>
+                <li>
+                  Reduces the LLM&apos;s decision space (use LLM only for narrow
+                  sub-tasks or selecting which workflow to use)
+                </li>
+                <li>
+                  Best for reliability, compliance, and doing one thing well.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>How to use them</strong>
+              <ul>
+                <li>
+                  Agent for intent discovery, generating options, stitching
+                  partial signals together.
+                </li>
+                <li>
+                  Workflow for execution of critical actions or rendering
+                  specific UIs.
+                </li>
+                <li>
+                  Hybrid: agent proposes and workflow executes. Constrain with
+                  tool schemas, policies and clear fallbacks.
+                </li>
+              </ul>
             </li>
           </ul>
+
+          <h2 className="text-2xl font-bold tracking-tight mb-4">Tools?</h2>
+          <p>You can provide the LLM with tools via the system prompt.</p>
+
+          <h3 className="text-lg font-semibold mb-2">Simplified example:</h3>
+          <p>
+            Just a list of available tools (or functions, or actions) with
+            inputs/type definitions (hidden for clarity) and descriptions.
+          </p>
+
+          <Image src={agent1} alt="Agent tools in system prompt" />
+
+          <p>The magic happens when we ask the LLM to choose a tool.</p>
+
+          <p>Example prompt sequence:</p>
+          <p className="text-sm text-muted-foreground">
+            Note: User prompt doesn’t have to be text or voice, it could be
+            triggered through some other interaction, mechanism or event.
+          </p>
+
+          <Image src={agent2} alt="Request sent to LLM" />
+
+          <p>
+            Assistant interprets request for help as a desire to focus and
+            understands it needs to start understanding the context and change
+            to a focus mode. It starts by requesting to run the
+            getVehicleContext tool.
+          </p>
+
+          <Image src={agent3} alt="Vehicle computer" />
+
+          <p>
+            This instructs the vehicle to run that function on the vehicle
+            computer.
+          </p>
+
+          <Image
+            src={agent4}
+            alt="Loop between LLM and computer running actions"
+          />
+
+          <p>
+            Then the vehicle and assistant communicate back and forth to
+            establish what action needs to happen. Each time the assistant
+            establishes the next tool that needs to run, and the vehicle runs
+            it, until...
+          </p>
+
+          <Image src={agent5} alt="Loop between computer and LLM" />
+
+          <p>
+            The assistant has decided which focus mode to set and requesting to
+            run the setFocusMode tool.
+          </p>
+
+          <Image src={agent6} alt="LLM resulting tool" />
+
+          <p>The vehicle executes the focus mode change.</p>
+
+          <Image src={agent7} alt="Vehicle executes tool" />
 
           <div className="mt-40">
             <div className="space-y-[50vh]">
@@ -233,10 +336,15 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Demo panel: fixed bottom on small screens, fixed right on large screens */}
-          <div className="fixed inset-x-0 bottom-0 h-[50vh] z-20 lg:inset-auto lg:fixed lg:top-4 lg:right-4 lg:w-5/12 lg:h-[calc(100vh-2rem)]">
-            <DemoPanel activeId={activeId} initialContext={initialContext} />
-          </div>
+          {/* Demo panel appears only once a demo section is active */}
+          {hasReachedFirst && (
+            <div className="fixed inset-x-0 bottom-0 h-[50vh] z-20 lg:inset-auto lg:fixed lg:top-4 lg:right-4 lg:w-5/12 lg:h-[calc(100vh-2rem)]">
+              <DemoPanel
+                activeId={panelActiveId}
+                initialContext={initialContext}
+              />
+            </div>
+          )}
         </div>
       </div>
     </main>
