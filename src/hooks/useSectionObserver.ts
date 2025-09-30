@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export function useSectionObserver(ids: string[]) {
-  const [activeId, setActiveId] = useState<string>(ids[0]);
-  const activeIdRef = useRef<string>(ids[0]);
+  const [activeId, setActiveId] = useState<string>("");
+  const activeIdRef = useRef<string>("");
+  const [hasReachedFirst, setHasReachedFirst] = useState<boolean>(false);
   const refs = useMemo(
     () =>
       ids.reduce<Record<string, React.RefObject<HTMLDivElement | null>>>(
@@ -60,6 +61,14 @@ export function useSectionObserver(ids: string[]) {
         const dominantEnough = topRatio >= MIN_VISIBLE_RATIO;
         const exceedsByDelta = topRatio >= currentRatio + HYSTERESIS_DELTA;
 
+        // Track whether we've reached (or passed) the first section
+        const firstTop = sections[0]?.getBoundingClientRect().top ?? 0;
+        if (firstTop <= 0 || (ratiosRef.current[ids[0]] ?? 0) > 0) {
+          if (!hasReachedFirst) setHasReachedFirst(true);
+        } else if (hasReachedFirst) {
+          setHasReachedFirst(false);
+        }
+
         if (
           topId !== currentId &&
           cooledDown &&
@@ -68,6 +77,12 @@ export function useSectionObserver(ids: string[]) {
         ) {
           lastSwitchAtRef.current = now;
           setActiveId(topId);
+        } else if (currentId !== "") {
+          // Only clear when we're above the first section (scrolling back to the top)
+          if (firstTop > 0) {
+            lastSwitchAtRef.current = now;
+            setActiveId("");
+          }
         }
       },
       {
@@ -81,12 +96,12 @@ export function useSectionObserver(ids: string[]) {
     sections.forEach((el) => observerRef.current?.observe(el));
 
     return () => observerRef.current?.disconnect();
-  }, [ids, refs]);
+  }, [ids, refs, hasReachedFirst]);
 
   // Keep a ref in sync so the observer callback can read the latest without re-instantiating
   useEffect(() => {
     activeIdRef.current = activeId;
   }, [activeId]);
 
-  return { refs, activeId };
+  return { refs, activeId, hasReachedFirst };
 }

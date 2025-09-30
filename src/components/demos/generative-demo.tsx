@@ -70,11 +70,28 @@ export function GenerativeDemo({ context }: { context: AppContext }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
         <h3 className="text-xl font-semibold">Agent-crafted plan</h3>
         <Button onClick={run} size="sm">
           Generate
         </Button>
+      </div>
+
+      <div className="mt-3">
+        <h4 className="text-xs font-semibold mb-1">
+          Reasoning trace (simulated)
+        </h4>
+        <div className="rounded-md border bg-white p-2 h-24 overflow-auto text-xs text-stone-600">
+          {log.length ? (
+            <ul className="list-disc pl-5 space-y-1">
+              {log.map((l, i) => (
+                <li key={i}>{l}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>—</p>
+          )}
+        </div>
       </div>
 
       <div className="mt-3 grid grid-cols-1 gap-3">
@@ -95,23 +112,6 @@ export function GenerativeDemo({ context }: { context: AppContext }) {
             Press Generate to see tool-calls and a proposed plan.
           </div>
         )}
-      </div>
-
-      <div className="mt-auto">
-        <h4 className="text-xs font-semibold mb-1">
-          Reasoning trace (simulated)
-        </h4>
-        <div className="rounded-md border bg-white p-2 h-24 overflow-auto text-xs text-stone-600">
-          {log.length ? (
-            <ul className="list-disc pl-5 space-y-1">
-              {log.map((l, i) => (
-                <li key={i}>{l}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>—</p>
-          )}
-        </div>
       </div>
     </div>
   );
